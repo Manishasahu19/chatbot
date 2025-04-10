@@ -44,7 +44,7 @@ function ChatScreen({ apiKey, userName }) {
     const isUser = msg.sender === 'user';
     const avatarUrl = isUser
       ? `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=4f46e5&color=fff&rounded=true&size=40`
-      : '/robot-logo.jpg';
+      :`${process.env.PUBLIC_URL}/robot-logo.jpg`;
     const nameLabel = isUser ? userName : 'AI Bot';
     const html = DOMPurify.sanitize(marked(msg.text));
 
