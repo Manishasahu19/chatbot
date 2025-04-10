@@ -1,0 +1,461 @@
+/* Root Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body.theme-light {
+    background-color: #f4f6fb;
+    color: #333;
+  }
+  
+  body.theme-dark {
+    background-color: #121212;
+    color: #f4f4f4;
+  }
+  
+  body.theme-blue {
+    background-color: #e7f0fd;
+    color: #123456;
+  }
+  
+  .app-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  /* ===========================
+     HEADER
+  ============================= */
+   .header {
+    width: 100%;
+    /* background: linear-gradient(to right, #667eea, #764ba2);  */
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  } 
+  
+
+  
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .theme-selector {
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .greeting {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  /* ===========================
+     NAME POPUP
+  ============================= */
+  .popup {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .popup-content h2 {
+    margin-bottom: 15px;
+  }
+  
+  .popup-content input {
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+  }
+  
+  .popup-content button {
+    margin-top: 15px;
+    padding: 10px 25px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  /* ===========================
+     CHAT SCREEN
+  ============================= */
+  .chat-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .messages-area {
+    width: 65%;
+    max-width: 850px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .chat-messages {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-bottom: 10px;
+  }
+  
+  .chat-message-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .chat-message-row.user {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  
+  .message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .message-content {
+    max-width: 75%;
+  }
+  
+  .message-sender {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 0.9rem;
+  }
+  
+  .message-bubble {
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #e0e0e0;
+    color: #000;
+    word-wrap: break-word;
+  }
+  
+  .chat-message-row.user .message-bubble {
+    background-color: #4f46e5;
+    color: #fff;
+  }
+  
+  .chat-message-row.bot .message-bubble {
+    background-color: #f3f4f6;
+    color: #000;
+  }
+  
+  body.theme-dark .chat-message-row.bot .message-bubble {
+    background-color: #333;
+    color: #f4f4f4;
+  }
+  
+  body.theme-dark .chat-message-row.user .message-bubble {
+    background-color: #1e40af;
+  }
+  
+  body.theme-blue .chat-message-row.bot .message-bubble {
+    background-color: #dceeff;
+  }
+  
+  body.theme-blue .chat-message-row.user .message-bubble {
+    background-color: #2563eb;
+    color: #fff;
+  }
+  
+  /* ===========================
+     INPUT AREA
+  ============================= */
+  .input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .input-area input {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    font-size: 1rem;
+  }
+  
+  .input-area button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .input-area button:hover {
+    background-color: #3730a3;
+  }
+  
+  .sticky-input {
+    position: sticky;
+    bottom: 0;
+    background: inherit;
+    padding: 10px 0;
+  }
+  
+  /* ==============================
+   MARKDOWN & CODE FORMATTER
+============================== */
+.message-bubble pre {
+    background-color: #1e1e1e;
+    color: #f4f4f4;
+    padding: 12px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 8px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  .message-bubble code {
+    background-color: #f4f4f4;
+    color: #d63384;
+    padding: 3px 6px;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  /* Inside pre > code: override inline code styling */
+  .message-bubble pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+  
+  /* Markdown Headings */
+  .message-bubble h1,
+  .message-bubble h2,
+  .message-bubble h3 {
+    margin: 10px 0 5px;
+    font-weight: 700;
+  }
+  
+  .message-bubble h1 {
+    font-size: 1.5rem;
+  }
+  
+  .message-bubble h2 {
+    font-size: 1.3rem;
+  }
+  
+  .message-bubble h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Links */
+  .message-bubble a {
+    color: #4f46e5;
+    text-decoration: underline;
+  }
+  
+  /* Lists */
+  .message-bubble ul,
+  .message-bubble ol {
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+  
+  .message-bubble li {
+    margin-bottom: 4px;
+  }
+  
+  /* Blockquote */
+  .message-bubble blockquote {
+    border-left: 4px solid #999;
+    padding-left: 10px;
+    margin: 10px 0;
+    color: #555;
+    font-style: italic;
+  }
+  
+  /* ==============================
+     THEME SUPPORT FOR MARKDOWN
+  ============================== */
+  
+  /* Dark Theme */
+  body.theme-dark .message-bubble pre {
+    background-color: #2d2d2d;
+    color: #f4f4f4;
+  }
+  
+  body.theme-dark .message-bubble code {
+    background-color: #444;
+    color: #f9cb9c;
+  }
+  
+  body.theme-dark .message-bubble blockquote {
+    color: #bbb;
+    border-left-color: #666;
+  }
+  
+  /* Blue Theme */
+  body.theme-blue .message-bubble pre {
+    background-color: #002b36;
+    color: #eee;
+  }
+  
+  body.theme-blue .message-bubble code {
+    background-color: #0d3b66;
+    color: #ffd700;
+  }
+  
+  body.theme-blue .message-bubble blockquote {
+    color: #235;
+    border-left-color: #045;
+  }
+  
+  /* Default Header Style */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+ 
+  /* Theme: Dark */
+  body.theme-dark .header {
+    background-color: #1f2937;
+    color: #f3f4f6;
+  }
+/* Theme: Light */
+body.theme-light .header {
+    background-color: #ffffff; /* Light neutral */
+    color: #1a202c;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Theme: Blue */
+  body.theme-blue .header {
+    background: linear-gradient(135deg, #2563eb, #3b82f6); /* Richer blue */
+    color: #ffffff;
+  }
+  
+  .logo {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .theme-selector {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .avatar {
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+  }
+  
+  .greeting {
+    font-size: 14px;
+  }
+  
+  .centered-input {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .input-centered {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .input-centered input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .input-centered button {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #4f46e5;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .input-centered button:hover {
+    background-color: #4338ca;
+  }
+  
