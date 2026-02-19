@@ -16,10 +16,12 @@ function ChatScreen({ apiKey, userName }) {
     setInput('');
     setLoading(true);
 
-    const context = updatedMessages.slice(-5).map((m) => ({
-      role: m.sender === 'user' ? 'user' : 'model',
-      parts: [{ text: m.text }]
-    }));
+    const context = updatedMessages
+      .slice(-5)
+      .map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: m.text }]
+      }));
 
     try {
       const response = await fetch(
@@ -34,20 +36,21 @@ function ChatScreen({ apiKey, userName }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error?.message || 'API Error');
+        throw new Error(data.error?.message || "API Error");
       }
 
       const botMessage =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response';
+        data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 
       setMessages((prev) => [
         ...prev,
         { sender: 'bot', text: botMessage }
       ]);
+
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { sender: 'bot', text: 'Error: ' + error.message }
+        { sender: 'bot', text: "Error: " + error.message }
       ]);
     } finally {
       setLoading(false);
@@ -64,6 +67,7 @@ function ChatScreen({ apiKey, userName }) {
       : `${process.env.PUBLIC_URL}/robot-logo.jpg`;
 
     const nameLabel = isUser ? userName : 'AI Bot';
+
     const html = DOMPurify.sanitize(marked(msg.text));
 
     return (
@@ -75,7 +79,7 @@ function ChatScreen({ apiKey, userName }) {
         <div className="message-content">
           <div className="message-sender">{nameLabel}</div>
           <div
-            className="message-bubble bot-text"
+            className={`message-bubble ${isUser ? 'user-bubble' : 'bot-bubble'}`}
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
@@ -118,7 +122,9 @@ function ChatScreen({ apiKey, userName }) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendPrompt()}
+            onKeyDown={(e) =>
+              e.key === 'Enter' && sendPrompt()
+            }
             placeholder="Ask me anything..."
           />
           <button onClick={sendPrompt}>Send</button>
