@@ -16,7 +16,7 @@ function App() {
           <>
             <Header userName={userName} />
             {/* <ChatScreen apiKey={"API_KEY"} userName={userName} /> */}
- <ChatScreen apiKey={"AIzaSyDFjO4lnNwiXckq1eXuieP7zlDT1fKjbYw"} userName={userName} />
+ <ChatScreen apiKey={"AIzaSyDOa-OnFc39w1zJ-Sngv0oK1c2G8vyoRnA"} userName={userName} />
           </>
         )}
       </div>
