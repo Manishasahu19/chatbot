@@ -6,20 +6,22 @@ function ChatScreen({ apiKey, userName }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const isChatEmpty = messages.length === 0 && !loading;
 
   const sendPrompt = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
-    const updatedMessages = [...messages, { sender: 'user', text: input }];
-    setMessages(updatedMessages);
+    const userMessage = input;
+    setMessages((prev) => [...prev, { sender: 'user', text: userMessage }]);
     setInput('');
     setLoading(true);
 
-    const context = updatedMessages.slice(-5).map((m) => ({
-      role: m.sender === 'user' ? 'user' : 'model',
-      parts: [{ text: m.text }]
-    }));
+    // 🔥 Only current message (No old context)
+    const context = [
+      {
+        role: "user",
+        parts: [{ text: userMessage }]
+      }
+    ];
 
     try {
       const response = await fetch(
@@ -27,7 +29,14 @@ function ChatScreen({ apiKey, userName }) {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: context }),
+          body: JSON.stringify({
+            contents: context,
+            generationConfig: {
+              temperature: 0.9,
+              topP: 1,
+              maxOutputTokens: 2048
+            }
+          }),
         }
       );
 
@@ -38,44 +47,40 @@ function ChatScreen({ apiKey, userName }) {
       }
 
       const botMessage =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response';
+        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "No response from model.";
 
       setMessages((prev) => [
         ...prev,
         { sender: 'bot', text: botMessage }
       ]);
+
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { sender: 'bot', text: 'Error: ' + error.message }
+        { sender: 'bot', text: "Error: " + error.message }
       ]);
     } finally {
       setLoading(false);
     }
   };
 
+  const clearChat = () => {
+    setMessages([]);
+  };
+
   const renderMessage = (msg, index) => {
     const isUser = msg.sender === 'user';
-
-    const avatarUrl = isUser
-      ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          userName
-        )}&background=4f46e5&color=fff&rounded=true&size=40`
-      : `${process.env.PUBLIC_URL}/robot-logo.jpg`;
-
-    const nameLabel = isUser ? userName : 'AI Bot';
-    const html = DOMPurify.sanitize(marked(msg.text));
+    const html = DOMPurify.sanitize(marked.parse(msg.text));
 
     return (
-      <div
-        key={index}
-        className={`chat-message-row ${isUser ? 'user' : 'bot'}`}
-      >
-        <img src={avatarUrl} alt="avatar" className="message-avatar" />
+      <div key={index} className={`chat-message-row ${isUser ? 'user' : 'bot'}`}>
         <div className="message-content">
-          <div className="message-sender">{nameLabel}</div>
+          <div className="message-sender">
+            {isUser ? userName : 'AI Bot'}
+          </div>
           <div
-            className="message-bubble bot-text"
+            className={`message-bubble ${isUser ? 'user-bubble' : 'bot-bubble'}`}
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
@@ -84,45 +89,31 @@ function ChatScreen({ apiKey, userName }) {
   };
 
   return (
-    <div
-      className={`chat-container ${
-        isChatEmpty ? 'centered-input' : ''
-      }`}
-    >
-      <div className="messages-area">
-        <div className="chat-messages">
-          {messages.map((msg, i) => renderMessage(msg, i))}
+    <div className="chat-container">
+      <div className="top-bar">
+        <button onClick={clearChat}>New Chat</button>
+      </div>
 
-          {loading && (
-            <div className="chat-message-row bot">
-              <img
-                src="/robot-logo.jpg"
-                alt="avatar"
-                className="message-avatar"
-              />
-              <div className="message-content">
-                <div className="message-sender">AI Bot</div>
-                <div className="message-bubble bot-bubble">
-                  Typing...
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="chat-messages">
+        {messages.map((msg, i) => renderMessage(msg, i))}
 
-        <div
-          className={`input-area ${
-            isChatEmpty ? 'input-centered' : 'sticky-input'
-          }`}
-        >
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendPrompt()}
-            placeholder="Ask me anything..."
-          />
-          <button onClick={sendPrompt}>Send</button>
-        </div>
+        {loading && (
+          <div className="message-bubble bot-bubble">
+            Typing...
+          </div>
+        )}
+      </div>
+
+      <div className="input-area">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendPrompt()}
+          placeholder="Ask me anything..."
+        />
+        <button onClick={sendPrompt} disabled={loading}>
+          {loading ? "Sending..." : "Send"}
+        </button>
       </div>
     </div>
   );
